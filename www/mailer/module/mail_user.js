@@ -18,6 +18,23 @@ exports.verifyEmailUser = function (userName, email, link, lang) {
     })
 };
 
+exports.verifyEmailUserImplement = function (username, email, link) {
+    let emailContent = getHeaderEmail('XIN CHAO')
+        + getContentVerifyEMailImplement('XAC MINH BANG CACH CLICK BEN DUOI', link);
+    +getFooterEmail();
+
+    mailer(email, 'VUI LONG XAC THUC EMAIL CUA BAN', emailContent, function (callback) {
+    })
+};
+
+exports.sendMailForgetPassword = function (email, fullName, link){
+    mailer(email, `XAC NHAN DE NHAN MAT KHAU MOI ${fullName}`, `nhan vao link nay ${link}`, function(callback){
+        console.log('_____________________________________')
+        console.log(callback);
+    });
+}
+
+
 /**
  * @param email
  * @param userName
@@ -77,6 +94,20 @@ function getHeaderEmail(title) {
         '<table style="margin-top:15px;margin-right:30px;margin-left:30px;color:#444;line-height:1.6;font-size:12px;' +
         'font-family:Arial,sans-serif" border="0" width="490" ' +
         'cellspacing="0" cellpadding="0" bgcolor="#ffffff"> ';
+}
+
+
+function getContentVerifyEMailImplement(message, link) {
+    return '<tbody>' +
+        '<tr>' +
+        '<td style="border-top:solid 1px #d9d9d9" colspan="2"> ' +
+        '<div style="padding:15px 0; line-height: 1.6;">' +
+        '<br><b style="font-size: 16px; text-align: center; display: block;">'+message+'</b>'+
+        '<br>' +
+        '<br><p style="text-align: center;"><a style="text-decoration: none; background: #2e3291; color: #fff; padding: 7px 25px; font-size: 15px; border-radius: 5px;" href="'+link+'">'+'XAC NHAN DIA CHI MAIL'+'</a></p>' +
+        '<br>' +
+        '</div>' +
+        '</td></tr></tbody>';
 }
 
 function getContentVerifyEMail(message, link, lang) {

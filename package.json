@@ -1,22 +1,8 @@
 {
-  "name": "iot-system-membership-card",
+  "name": "triptravel-services",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "keywords": [
-    "web-rtc",
-    "socket.io"
-  ],
-  "author": "KoF",
-  "license": "ISC",
   "dependencies": {
     "authenticator": "^1.1.2",
     "bluebird": "^3.4.6",
@@ -69,5 +55,20 @@
     "web3-eth-accounts": "^1.0.0-beta.26",
     "ws": "^4.1.0",
     "xml2js": "^0.4.19"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khanhney/triptravel-services.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khanhney/triptravel-services/issues"
+  },
+  "homepage": "https://github.com/khanhney/triptravel-services#readme"
 }
