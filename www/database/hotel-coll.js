@@ -2,12 +2,13 @@
 
 const BASE_COLL = require('./intalize/base-coll');
 
-const Schema    = require('mongoose').Schema;
+const Schema = require('mongoose').Schema;
 
 module.exports  = BASE_COLL("hotel", {
-   title: String,
+   title      : String,
    description: String,
-   review: Number,
-   price: String,
-   image: String
+   review     : Number,
+   price      : String,
+   image      : String,
+   status     : { type: Number, default: 1 }
 });

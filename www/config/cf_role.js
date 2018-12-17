@@ -1,17 +1,17 @@
 "use strict";
-const jwt = require('jsonwebtoken');
+const jwt   = require('jsonwebtoken');
 const cfJwt = require('./cf_jws');
 
 module.exports = {
     role: {
         all: {
-            bin: 1,
+            bin : 1,
             auth: function (req, res, next) {
                 next();
             }
         },
         user: {
-            bin: 2,
+            bin : 2,
             auth: function (req, res, next) {
                 var token = req.params.token || req.body.token || req.query.token || req.headers[ 'x-access-token' ] || req.headers.token;
                 if (token) {
@@ -19,12 +19,14 @@ module.exports = {
                         if (err) {
                             return res.json({error: true, message: 'Failed to authenticate token.'});
                         } else {
-                            if (Number(decoded.role) === 1) {
-                                req.user = decoded;
-                                next();
-                            } else {
-                                return res.json({success: false, message: 'Error: Permission denied.'});
-                            }
+                            // if (Number(decoded.role) === 1) {
+                            //     req.user = decoded;
+                            //     next();
+                            // } else {
+                            //     return res.json({success: false, message: 'Error: Permission denied.'});
+                            // }
+                            req.user = decoded;
+                            next();
                         }
                     });
                 } else {
@@ -36,7 +38,7 @@ module.exports = {
             }
         },
         admin: {
-            bin: 3,
+            bin : 3,
             auth: function (req, res, next) {
                 var token = req.params.token ||req.body.token || req.query.token || req.headers[ 'x-access-token' ] || req.headers.token;
                 if (token) {
@@ -63,13 +65,13 @@ module.exports = {
     },
 
     authorization: function (req, res, next) {
-        var hasRole = false;
+        var hasRole     = false;
         var currentRole = null;
 
         for (var itemRole in this.role) {
             if (!hasRole) {
                 if (res.bindingRole.config.auth.includes(this.role[ itemRole ].bin)) {
-                    hasRole = true;
+                    hasRole     = true;
                     currentRole = this.role[ itemRole ];
                 }
             }
