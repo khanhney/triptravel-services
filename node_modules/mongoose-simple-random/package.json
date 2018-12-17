@@ -1,0 +1,33 @@
+{
+  "name": "mongoose-simple-random",
+  "version": "0.4.1",
+  "description": "Simple and easy-to-use NodeJS Mongoose Schema plugin to pull random documents",
+  "main": "mongoose-simple-random.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/larryprice/mongoose-simple-random.git"
+  },
+  "keywords": [
+    "mongoose",
+    "random"
+  ],
+  "author": "Larry Price <larry.price.dev@gmail.com> (http://larry-price.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/larryprice/mongoose-simple-random/issues"
+  },
+  "homepage": "https://github.com/larryprice/mongoose-simple-random",
+  "devDependencies": {
+    "async": "^2.1.4",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "mockgoose": "^6.0.8",
+    "mongoose": "^4.7.7"
+  }
+}

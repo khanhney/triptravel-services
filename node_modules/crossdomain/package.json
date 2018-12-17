@@ -1,0 +1,13 @@
+{
+  "name": "crossdomain",
+  "version": "0.0.1",
+  "repository": "https://github.com/segmentio/crossdomain.git",
+  "author": "friends@segment.io",
+  "dependencies": {
+    "defaults": "~1.0.0",
+    "handlebars": "~1.0.12"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}

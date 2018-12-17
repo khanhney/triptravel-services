@@ -3,20 +3,20 @@
 let util = require('util');
 
 let baseUrl = require('../../config/cf_host').domain;
-let logo1 = require('../../utils/constant')._base_logo1_url;
+let logo1   = require('../../utils/constant')._base_logo1_url;
 let webName = require('../../utils/constant').webName;
-let mailer = require('../mailer');
-let language = require('../../../language/language_routes');
-const defaultLanguage = language.defaultLanguage;
+let mailer  = require('../mailer');
+// let language = require('../../../language/language_routes');
+// const defaultLanguage = language.defaultLanguage;
 
-exports.verifyEmailUser = function (userName, email, link, lang) {
-    let emailContent = getHeaderEmail(util.format(language.getLanguage('welcome_to_website', lang), ['EXT GROUP']))
-        + getContentVerifyEMail(language.getLanguage('xac_minh_dia_cho_email_cua_ban_click_vao_ben_duoi', lang), link, lang);
-    +getFooterEmail();
+// exports.verifyEmailUser = function (userName, email, link, lang) {
+//     let emailContent = getHeaderEmail(util.format(language.getLanguage('welcome_to_website', lang), ['EXT GROUP']))
+//         + getContentVerifyEMail(language.getLanguage('xac_minh_dia_cho_email_cua_ban_click_vao_ben_duoi', lang), link, lang);
+//     +getFooterEmail();
 
-    mailer(email, util.format(language.getLanguage('vui_long_xac_thuc_email_cua_ban', lang), [userName]), emailContent, function (callback) {
-    })
-};
+//     mailer(email, util.format(language.getLanguage('vui_long_xac_thuc_email_cua_ban', lang), [userName]), emailContent, function (callback) {
+//     })
+// };
 
 exports.verifyEmailUserImplement = function (username, email, link) {
     let emailContent = getHeaderEmail('XIN CHAO')

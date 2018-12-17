@@ -1,0 +1,1 @@
+<cross-domain-policy><allow-http-request-headers-from domain="{{ domain }}" headers="{{ allow-http-request-headers-from-headers }}"/><site-control permitted-cross-domain-policies="{{ site-control-permitted-cross-domain-policies }}"/><allow-access-from domain="{{ allow-access-from-domain }}" secure="{{ allow-access-from-secure }}"/></cross-domain-policy>

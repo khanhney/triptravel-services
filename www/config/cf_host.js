@@ -12,12 +12,12 @@ exports.post_product = '';
  * [HOST-POST DEVELOPMENT]
  */
 exports.host_dev = 'localhost';
-exports.post_dev = '5000';
+exports.post_dev = '5907';
 
 /**
  * [HOST ROUTER]
  */
 
-exports.host = (!hostProduct) ? this.host_dev : this.host_product;
-exports.post = (!hostProduct) ? this.post_dev : this.post_product;
+exports.host   = (!hostProduct) ? this.host_dev : this.host_product;
+exports.post   = (!hostProduct) ? this.post_dev : this.post_product;
 exports.domain = (!hostProduct) ? 'http://' + this.host_dev + ':' + this.post_dev + '/' : 'https://kof.com.vn';
