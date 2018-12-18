@@ -1,0 +1,19 @@
+<script>
+    $(document).ready(function(){
+        $('.btnRemoveHotel').on('click', function(){
+            let hotelID = $(this).attr('_id');
+
+            $.ajax({
+                url: `/remove-hotel/${hotelID}`,
+                method: 'GET',
+                success: function(resp) {
+                    if (resp.error) return toastr.error('Xóa Travel Thất Bại', 'Thông Báo Xóa');
+                    $(`#listHotel_${hotelID}`).remove();
+                    return toastr.success('Xóa Travel Thành Công', 'Thông Báo Xóa')
+                }, error: function(err) {
+                    console.log({ err });
+                }
+            }) 
+        });
+    })
+</script>

@@ -1,9 +1,10 @@
 "use strict";
-let express = require('express');
-let fs = require('fs');
-let APP = require('../../app');
-let url = require('url');
-
+let   express        = require('express');
+let   fs             = require('fs');
+let   APP            = require('../../app');
+let   url            = require('url');
+const moment         = require('moment');
+const formatCurrency = require('number-format.js');
 class ChildRouter{
     constructor(basePath) {
         this.basePath = basePath;
@@ -103,22 +104,25 @@ class ChildRouter{
         }
 
         // const ogTitle = "HELLO TITLE", ogDescription = "DESCRIPTION OF OG";
-        SEO ? data.SEO = SEO.SEO.data : data.SEO = {};
-        data.render = res.bindingRole.config;
+        SEO ? data.SEO  = SEO.SEO.data : data.SEO = {};
+            data.render = res.bindingRole.config;
         // data.og = { ogTitle, ogDescription };
         data.url = url.format({
             protocol: req.protocol,
-            host: req.get('host'),
+            host    : req.get('host'),
             pathname: req.originalUrl
         });
+        data.moment         = moment;
+        data.formatCurrency = formatCurrency;
+
+        data.originalUrl = req.originalUrl;
+
         // data.language = langSession.getLang(req.session);
-
-
         return res.render(res.bindingRole.config.view, data);
     }
 
     static renderToPath(req, res, path, data) {
-        data = data == null ? {} : data;
+        data        = data == null ? {} : data;
         data.render = res.bindingRole.config;
         return res.render(path, data);
     }

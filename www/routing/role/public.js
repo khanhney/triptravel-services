@@ -8,6 +8,10 @@ const USER_MODEL   = require('../../models/user');
 const TRIP_MODEL   = require('../../models/trip');
 const HOTEL_MODEL  = require('../../models/hotel');
 const RATING_MODEL = require('../../models/rating');
+const TRIP_COLL    = require('../../database/travel-coll');
+const APP          = require('../../../app');
+const stringUtils  = require('../../utils/string_utils');
+const HOTEL_COLL   = require('../../database/hotel-coll');
 
 module.exports = class Auth extends ChildRouter {
     constructor() {
@@ -16,6 +20,114 @@ module.exports = class Auth extends ChildRouter {
 
     registerRouting(io) {
         return {
+            
+            '/': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        ChildRouter.redirect(res, '/list-travel');
+                    }]
+                },
+            },
+            
+            '/list-travel': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/list-travel.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        try {
+                            let listTravel = await TRIP_COLL.find({});
+                            if (!listTravel) return res.json({ error: true, message: 'cannot_get_list' });
+                            ChildRouter.renderToView(req, res, { listTravel });
+                        } catch (error) {
+                            return res.json({ error: true, message: error.message });
+                        }
+                    }]
+                },
+            },
+            '/list-hotel-travel': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/list-hotel.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let listHotel = await HOTEL_MODEL.getListHotel();
+                        ChildRouter.renderToView(req, res, { listHotel: listHotel.data });
+                    }]
+                },
+            },
+            '/init-travel': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/init-travel.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        ChildRouter.renderToView(req, res, { infoTrip: undefined });
+                    }]
+                },
+            },
+
+            '/init-hotel-travel': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/init-hotel-travel.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        ChildRouter.renderToView(req, res, { infoHotel: undefined });
+                    }]
+                },
+            },
+
+
+            '/info-trip/:tripID': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/init-travel.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        const { tripID } = req.params;
+                        let   infoTrip   = await TRIP_MODEL.getDetail(tripID);
+                        return ChildRouter.renderToView(req, res, { infoTrip: infoTrip.data });
+                    }]
+                },
+            },
+
+            '/info-hotel/:hotelID': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/init-hotel-travel.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        const { hotelID } = req.params;
+                        let   infoHotel   = await HOTEL_MODEL.getInfo(hotelID);
+                        return ChildRouter.renderToView(req, res, { infoHotel: infoHotel.data });
+                    }]
+                },
+            },
+
+            // ==================== API ================ //
             // ==================== USER ================ //
             '/register': {
                 config: {
@@ -71,21 +183,21 @@ module.exports = class Auth extends ChildRouter {
             
             '/add-trip': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
                     post: [ async (req, res) => {
-                        let { title, description, isFeature, price, startTime } = req.body;
-                        let insertTrip                                          = await TRIP_MODEL.insert(title, description, isFeature, price, startTime);
+                        let { title, description, isFeature, price, startTime, status } = req.body;
+                        let insertTrip                                                  = await TRIP_MODEL.insert(title, description, isFeature, price, startTime, status);
                         res.json(insertTrip);
                     }]
                 },
             },
 
-            '/info-trip/:tripID': {
+            '/api/info-trip/:tripID': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
@@ -99,7 +211,7 @@ module.exports = class Auth extends ChildRouter {
 
             '/list-trip': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
@@ -110,10 +222,77 @@ module.exports = class Auth extends ChildRouter {
                 },
             },
 
+            '/remove-trip/:tripID': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let { tripID } = req.params;
+                        let removeTrip = await TRIP_MODEL.removeTrip(tripID);
+                        res.json(removeTrip);
+                    }]
+                },
+            },
+
+            '/update-trip/:tripID': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    post: [ async (req, res) => {
+                        let { tripID }                                                  = req.params;
+                        let { title, description, isFeature, price, startTime, status } = req.body;
+                        let updateTrip                                                  = await TRIP_MODEL.update(tripID, title, description, isFeature, price, startTime, status);
+                        res.json(updateTrip);
+                    }]
+                },
+            },
+
+            '/upload-image-trip/:tripID': {
+                config: {
+                    auth: [roles.role.all.bin],
+                    type: 'json',
+                },
+                methods: {
+                    post: [async (req, res) => {
+                        const { tripID } = req.params;
+                        if (req.files) {
+                            const uploadPath = `${APP.BASE_DIR}/files/trip`;
+
+                            // FOR WINDOWS
+                            // fileUtils.checkAndCreateFolder(uploadPath);
+            
+                            let file = req.files.image;
+            
+                            const filePath    = file.name.split('.');
+                            const newFileName = `${stringUtils.md5((new Date()).getTime() + '_' + stringUtils.md5(file.name) + '_' + stringUtils.randomString())}.${filePath[ filePath.length - 1 ]}`;
+            
+                            file.mv(`${uploadPath}/${newFileName}`, function (err) {
+                                if (err) return res.json({
+                                    error  : true,
+                                    message: 'cannot_update_image'
+                                })
+                            });
+            
+                            let uploadImage = await TRIP_COLL.findByIdAndUpdate(tripID, {
+                                image: `/files/trip/${newFileName}`
+                            }, { new: true });
+                            
+                            if (!uploadImage) return res.json({ error: true, message: 'cannot_upload_image' });
+
+                            res.json({ error: false, data: uploadImage });
+                        }                        
+                    }]
+                },
+            },
+
             // ==================== HOTEL ================ //
             '/add-hotel': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
@@ -125,9 +304,47 @@ module.exports = class Auth extends ChildRouter {
                 },
             },
 
+            '/upload-image-hotel/:hotelID': {
+                config: {
+                    auth: [roles.role.all.bin],
+                    type: 'json',
+                },
+                methods: {
+                    post: [async (req, res) => {
+                        const { hotelID } = req.params;
+                        if (req.files) {
+                            const uploadPath = `${APP.BASE_DIR}/files/hotel`;
+
+                            // FOR WINDOWS
+                            // fileUtils.checkAndCreateFolder(uploadPath);
+            
+                            let file = req.files.image;
+            
+                            const filePath    = file.name.split('.');
+                            const newFileName = `${stringUtils.md5((new Date()).getTime() + '_' + stringUtils.md5(file.name) + '_' + stringUtils.randomString())}.${filePath[ filePath.length - 1 ]}`;
+            
+                            file.mv(`${uploadPath}/${newFileName}`, function (err) {
+                                if (err) return res.json({
+                                    error  : true,
+                                    message: 'cannot_update_image'
+                                })
+                            });
+            
+                            let uploadImage = await HOTEL_COLL.findByIdAndUpdate(hotelID, {
+                                image: `/files/hotel/${newFileName}`
+                            }, { new: true });
+                            
+                            if (!uploadImage) return res.json({ error: true, message: 'cannot_upload_image' });
+
+                            res.json({ error: false, data: uploadImage });
+                        }                        
+                    }]
+                },
+            },
+
             '/detail-hotel/:hotelID': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
@@ -141,13 +358,27 @@ module.exports = class Auth extends ChildRouter {
 
             '/list-hotel': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
                     get: [ async (req, res) => {
                         let listHotel = await HOTEL_MODEL.getListHotel();
                         res.json(listHotel);
+                    }]
+                },
+            },
+
+            '/remove-hotel/:hotelID': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let { hotelID } = req.params;
+                        let removeHotel = await HOTEL_COLL.findByIdAndRemove(hotelID);
+                        res.json(removeHotel);
                     }]
                 },
             },
@@ -170,7 +401,7 @@ module.exports = class Auth extends ChildRouter {
 
             '/detail-rating/:ratingID': {
                 config: {
-                    auth: [ roles.role.user.bin ],
+                    auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {

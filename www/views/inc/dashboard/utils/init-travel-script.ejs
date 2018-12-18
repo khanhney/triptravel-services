@@ -1,0 +1,105 @@
+<script>
+    $(document).ready(function(){
+
+        var infoTripJustInsert;
+        const getData = () => {
+            let title, description, price, startTime, isFeature, status;
+            title = $('#txtTitle').val();
+            description = $('#txtDescription').val();
+            price = $('#txtPrice').val();
+            startTime = $('#txtStartTime').val();
+
+            let isFeatureElement = $('#switchFeature');
+            let statusElement    = $('#switchStatus');
+
+            isFeatureElement[0].checked ? isFeature = 1 : isFeature = 0;
+            statusElement[0].checked    ? status = 1    : status = 0;
+            return { title, description, price, startTime, isFeature, status };
+        }
+
+        const clearData = () => {
+            $('#txtTitle').val("");
+            $('#txtDescription').val("");
+            $('#txtPrice').val("");
+            $('#txtStartTime').val("");
+        }
+
+        $('#btnAddAndBack').on('click', function(e) {
+            let data = getData();
+            $.ajax({
+                url: '/add-trip',
+                method: 'POST',
+                data: data,
+                success: function(resp) {
+                    infoTripJustInsert = resp.data._id;
+                    if (resp.error) return toastr.error('Tạo Travel Thất Bại', 'Thông Báo Khởi Tạo')
+                    toastr.success(`Tạo Travel ${resp.data.title} Thành Công!`, 'Thông Báo Khởi Tạo')
+                    // window.history.back();
+                    $('#imageUpload').attr('_idTrip', infoTripJustInsert);
+                    return $('#cardUploadImage').show();
+                },
+                error: function(err) {
+                    console.log({ err });
+                    if (resp.error) return toastr.error(`Tạo Travel Thất Bại, ${err}`, 'Thông Báo Khởi Tạo')
+                }
+            })
+        });
+
+        $('#btnClearData').on('click', function(e){
+            e.preventDefault();
+            clearData();
+        });
+
+       
+
+        $('#btnUpdateAndSit').on('click', function(e){
+            e.preventDefault();
+            let tripID = $(this).attr('_id');
+            let data = getData();
+
+            $.ajax({
+                url: `/update-trip/${tripID}`,
+                method: 'POST',
+                data: data,
+                success: function(resp) {
+                    console.log({ resp })
+                    if (resp.error) return toastr.error('Cập Nhật Travel Thất Bại', 'Thông Báo Khởi Tạo')
+                    toastr.success(`Cập Nhật Travel ${resp.data.title} Thành Công!`, 'Thông Báo Khởi Tạo')
+                },
+                error: function(err) {
+                    console.log({ err });
+                    if (resp.error) return toastr.error(`Cập Nhật Travel Thất Bại, ${err}`, 'Thông Báo Khởi Tạo')
+                }
+            })
+        });
+
+        $('#btnUpdateAndBack').on('click', function(e){
+            e.preventDefault();
+            let tripID = $(this).attr('_id');
+            let data = getData();
+
+            $.ajax({
+                url: `/update-trip/${tripID}`,
+                method: 'POST',
+                data: data,
+                success: function(resp) {
+                    console.log({ resp })
+                    if (resp.error) return toastr.error('Cập Nhật Travel Thất Bại', 'Thông Báo Khởi Tạo')
+                    toastr.success(`Cập Nhật Travel ${resp.data.title} Thành Công!`, 'Thông Báo Khởi Tạo')
+                    window.history.back();
+                },
+                error: function(err) {
+                    console.log({ err });
+                    if (resp.error) return toastr.error(`Cập Nhật Travel Thất Bại, ${err}`, 'Thông Báo Khởi Tạo')
+                }
+            })
+        });
+
+        let _idTripElement = $('#_idTrip');
+        let _idTrip = _idTripElement.val();
+        let triggerUploadImage = false;
+        
+        if (_idTrip) return triggerUploadImage = true;
+        if (!triggerUploadImage) return $('#cardUploadImage').hide();
+    }); 
+</script>

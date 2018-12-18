@@ -1,0 +1,36 @@
+<script>
+    $(document).ready(function(){
+
+        const getData = () => {
+            let title, description, price, review;
+            title = $('#txtTitle').val();
+            description = $('#txtDescription').val();
+            price = $('#txtPrice').val();
+            startTime = $('#txtReview').val();
+
+            return { title, description, price, review };
+        }
+
+
+        $('#btnAddAndBack').on('click', function(e) {
+            let data = getData();
+            $.ajax({
+                url: '/add-hotel',
+                method: 'POST',
+                data: data,
+                success: function(resp) {
+                    infoTripJustInsert = resp.data._id;
+                    if (resp.error) return toastr.error('Tạo Hotel Thất Bại', 'Thông Báo Khởi Tạo')
+                    toastr.success(`Tạo Hotel ${resp.data.title} Thành Công!`, 'Thông Báo Khởi Tạo')
+                    // window.history.back();
+                    $('#imageUpload').attr('_idTrip', infoTripJustInsert);
+                    return $('#cardUploadImage').show();
+                },
+                error: function(err) {
+                    console.log({ err });
+                    if (resp.error) return toastr.error(`Tạo Hotel Thất Bại, ${err}`, 'Thông Báo Khởi Tạo')
+                }
+            });
+        });
+    }); 
+</script>

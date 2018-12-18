@@ -12,7 +12,7 @@ exports.post_product = '';
  * [HOST-POST DEVELOPMENT]
  */
 exports.host_dev = 'localhost';
-exports.post_dev = '5909';
+exports.post_dev = '6909';
 
 /**
  * [HOST ROUTER]

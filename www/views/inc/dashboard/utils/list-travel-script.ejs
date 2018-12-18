@@ -1,0 +1,25 @@
+<script>
+    $(document).ready(function(){
+
+        $('.btnRemoveTrip').on('click', function(e){
+            e.preventDefault();
+
+            let tripID = $(this).attr('_id');
+            // $(`#listTravel_${tripID}`).remove();
+            $.ajax({
+                url: `/remove-trip/${tripID}`,
+                method: 'GET',
+                success: function(resp) {
+                    if(!resp.error){
+                        toastr.success(`Xóa Travel Thành Công!`, 'Thông Báo Xóa')
+                        return $(`#listTravel_${tripID}`).remove();
+                    }
+                    return toastr.error(`Xóa Travel Thất Bại!`, 'Thông Báo Xóa')
+                }, error: function(err) {
+                    console.log(err);
+                }
+            })
+        });
+
+    });
+</script>

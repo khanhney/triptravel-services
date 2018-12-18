@@ -1,0 +1,147 @@
+<!-- Begin page -->
+    <div id="wrapper">
+        <!-- Top Bar Start -->
+        <% include components/top_nav.ejs%>
+        <!-- Top Bar End -->
+        <% include components/left_nav.ejs %>
+        <!-- Left Sidebar End -->
+        <input type="text" id="_idTrip" 
+            <%if(infoTrip){%>
+                value="<%= infoTrip._id%>"
+            <%}else{%>
+                value=""
+            <% }%>
+        />
+        <!-- Start right Content here -->
+        <div class="content-page">
+            <!-- Start content -->
+            <br>
+            <div class="content">
+            <br>
+                <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="card m-b-20">
+                                    <div class="card-body">
+                                        <h4 class="mt-0 header-title">Thông Tin Du Lịch K-Travel</h4>
+                                        <br>
+                                        <div class="form-group row">
+                                            <label for="txtTitle" class="col-sm-2 col-form-label">Tiêu Đề</label>
+                                            <div class="col-sm-10"><input class="form-control" placeholder="Du Lịch Mỹ 5 Ngày" id="txtTitle" type="text"
+                                                <%if (infoTrip) {%>
+                                                    value="<%= infoTrip.title%>"
+                                                <%}%>
+                                            ></div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="txtPrice" class="col-sm-2 col-form-label">Giá</label>
+                                            <div class="col-sm-10"><input class="form-control" placeholder="59,000" id="txtPrice" type="number"
+                                                <%if (infoTrip) {%>
+                                                    value="<%= infoTrip.price%>"
+                                                <%}%>
+                                            ></div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="txtStartTime" class="col-sm-2 col-form-label">Ngày Bắt Đầu</label>
+                                            <div class="col-sm-10"><input class="form-control" id="txtStartTime" type="date"
+                                                <%if (infoTrip) {%>
+                                                    value="<%= moment(infoTrip.startTime).format().substring(0, 10);%>"
+                                                <%}%>
+                                            ></div>
+                                        </div>
+
+                                        
+                                        <div class="form-group">
+                                            <label>Mô Tả</label>
+                                            <div><textarea required="" class="form-control" rows="18" id="txtDescription" ><%if (infoTrip) {%><%= infoTrip.description%> <%}%></textarea></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                            <div class="col-lg-4">
+                                <div class="card m-b-20">
+                                    <div class="card-body">
+                                        <h4 class="mt-0 header-title">Thông Tin Meta</h4>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Ưu Tiên</label>
+                                                    <div>
+                                                        <div class="input-group">
+                                                            <input id="switchFeature" switch="none" checked="checked" type="checkbox"> 
+                                                            <label for="switchFeature" data-on-label="On" data-off-label="Off"></label> 
+                                                        </div>
+                                                        <!-- input-group -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Trạng Thái</label>
+                                                    <div>
+                                                        <div class="input-group">
+                                                            <input id="switchStatus" switch="dark" checked="checked" type="checkbox"> 
+                                                            <label for="switchStatus" data-on-label="On" data-off-label="Off"></label> 
+                                                        </div>
+                                                        <!-- input-group -->
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card m-b-20" id="cardUploadImage">
+                                    <div class="card-body">
+                                        <h4 class="mt-0 header-title">Ảnh Minh Họa</h4>
+                                        <br>
+                                            <div class="container">
+                                                <div class="avatar-upload">
+                                                    <div class="avatar-edit">
+                                                        <input <%if (infoTrip) {%> _idTrip="<%=infoTrip._id%>" <%}%> type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                                        <label for="imageUpload"></label>
+                                                    </div>
+                                                    <div class="avatar-preview">
+                                                        <!--<div id="imagePreview" style="background-image: url(http://i.pravatar.cc/500?img=7);">-->
+                                                        <div id="imagePreview" 
+                                                            <% if(infoTrip){%>
+                                                                style="background-image: url(<%= infoTrip.image%>);"
+                                                            <% }%>
+                                                        >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- end col -->
+                        </div>
+
+                        <div class="row">
+                            <%if (infoTrip) {%>
+                                <div class="col-md-4 offset-md-4">
+                                    <button type="button" id="btnUpdateAndBack" _id="<%= infoTrip._id%>" class="btn btn-danger waves-effect waves-light">Cập Nhật và Trở Lại</button>
+                                    <button type="button" id="btnUpdateAndSit"  _id="<%= infoTrip._id%>" class="btn btn-info waves-effect waves-light">Cập Nhật và Tiếp Tục</button>
+                                </div>
+                            <%}else{%>
+                                <div class="col-md-4 offset-md-4">
+                                    <button type="button" id="btnAddAndBack" class="btn btn-primary waves-effect waves-light">Thêm và Trở Lại</button>
+                                    <button type="button" class="btn btn-danger waves-effect waves-light">Thêm và Tiếp Tục</button>
+                                    <button type="button" id="btnClearData" class="btn btn-info waves-effect waves-light">Bỏ</button>
+                                </div>
+                            <%}%>
+                            
+                        </div>
+
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- content -->
+             <footer class="footer">© 2018 KoF - <span class="d-none d-sm-inline-block">Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ungdungthongminh.vn" target="blank">ungdungthongminh.vn</a></span>.</footer>
+         </div>
+        <!-- END right Content here -->
+    </div>      

@@ -1,0 +1,88 @@
+<!-- Begin page -->
+    <div id="wrapper">
+        <!-- Top Bar Start -->
+        <% include components/top_nav.ejs%>
+        <!-- Top Bar End -->
+        <% include components/left_nav.ejs %>
+        <!-- Left Sidebar End -->
+
+        <!-- Start right Content here -->
+        <div class="content-page">
+            <!-- Start content -->
+            <div class="content">
+                <div class="container-fluid">
+
+                    <table class="table table-dark mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tiêu Đề</th>
+                                <th>Mô Tả</th>
+                                <th>Ưu Tiên</th>
+                                <th>Ngày Xuất Phát</th>
+                                <th>Giá</th>
+                                <th>Trạng Thái</th>
+                                <th>QR-Code</th>
+                                <th>Tùy Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% var flag = 1; %>
+                            <% listTravel.forEach(item => { %>
+                                <tr style="cursor: pointer" id="listTravel_<%= item._id%>">
+                                    <th scope="row"><%= flag%></th>
+                                    <td>
+                                        <a href="/info-trip/<%= item._id%>" style="color: white"><%= item.title%></a>
+                                    </td>
+                                    <td>
+                                        <%if(item.description) {%>
+                                            <%= item.description.substring(0,114)%>
+                                            <%if(item.description.length> 114) {%>
+                                                ...
+                                            <%} %>
+                                        <%}%>
+                                    </td>
+                                    <td>
+                                        <%if (item.isFeature) {%>
+                                            <span class="badge badge-success">Ưu Tiên</span>
+                                        <%}else {%>
+                                            <span class="badge badge-danger">Thường</span>
+                                        <%}%>
+                                    </td>
+                                    <td><%= moment(item.startTime).subtract(10, 'days').calendar();%></td>
+                                    <td><%= formatCurrency('###,###.', item.price)%> VNĐ</td>
+                                    <td>
+                                        <%if (item.isFeature) {%>
+                                            <span class="badge badge-info">Đang Hoạt Động</span>
+                                        <%}else {%>
+                                            <span class="badge badge-danger">Khóa</span>
+                                        <%}%>
+                                    </td>
+
+                                    <td>
+                                        <img src="<%= item.qrcode%>">
+                                    </td>
+
+                                    <td>
+                                        <a href="/info-trip/<%= item._id%>" >
+                                            <i class="mdi mdi-pencil"></i>
+                                        </a>
+                                        
+                                        <a class="btnRemoveTrip" _id="<%= item._id%>">
+                                            <i class="mdi mdi-bookmark-remove"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% flag = flag + 1;%>
+                            <% })%>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- content -->
+            <footer class="footer">© 2018 KoF - <span class="d-none d-sm-inline-block">Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ungdungthongminh.vn" target="blank">ungdungthongminh.vn</a></span>.</footer>
+        </div>
+        <!-- END right Content here -->
+    </div>

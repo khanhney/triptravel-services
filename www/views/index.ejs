@@ -1,3 +1,19 @@
 <% include layout/head.ejs %>
 <%- include(render.inc) %>
 <% include layout/footer.ejs %>
+
+<%if (render.inc == 'inc/dashboard/init-travel.ejs'){%>
+    <%- include inc/dashboard/utils/init-travel-script %>
+<%}%>
+
+<%if (render.inc == 'inc/dashboard/list-travel.ejs'){%>
+    <%- include inc/dashboard/utils/list-travel-script %>
+<%}%>
+
+<%if (render.inc == 'inc/dashboard/init-hotel-travel.ejs'){%>
+    <%- include inc/dashboard/utils/init-hotel-script %>
+<%}%>
+
+<%if (render.inc == 'inc/dashboard/list-hotel.ejs'){%>
+    <%- include inc/dashboard/utils/list-hotel-script %>
+<%}%>

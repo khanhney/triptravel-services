@@ -1,0 +1,62 @@
+<!-- Begin page -->
+    <div id="wrapper">
+        <!-- Top Bar Start -->
+        <% include components/top_nav.ejs%>
+        <!-- Top Bar End -->
+        <% include components/left_nav.ejs %>
+        <!-- Left Sidebar End -->
+
+        <!-- Start right Content here -->
+        <div class="content-page">
+            <!-- Start content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th><strong>Tiêu Đề</strong></th>
+                                <th><strong>Mô Tả</strong></th>
+                                <th><strong>Đánh Giá</strong></th>
+                                <th><strong>Giá</strong></th>
+                                <th><strong>Trạng Thái</strong></th>
+                                <th><strong>Tùy Chọn</strong></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% var flag = 1; %>
+                            <%listHotel.forEach(item => {%>
+                                <tr id="listHotel_<%=item._id%>">
+                                    <th scope="row"><%= flag%></th>
+                                    <td>
+                                        <a href="/info-hotel/<%=item._id%>">
+                                            <%= item.title%>
+                                        </a>
+                                    </td>
+                                    <td><%= item.description.substring(0, 167)%></td>
+                                    <td><%= item.review%></td>
+                                    <td><%= formatCurrency('###,###.', item.price)%></td>
+                                    <td>
+                                        <%if (item.status) {%>
+                                            <span class="badge badge-info">Đang Hoạt Động</span>
+                                        <%}else {%>
+                                            <span class="badge badge-danger">Khóa</span>
+                                        <%}%>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger waves-effect waves-light btnRemoveHotel" _id="<%=item._id%>">Xóa</button>
+                                    </td>
+                                </tr>
+                                <% flag = flag + 1;%>
+                            <%})%>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- content -->
+            <footer class="footer">© 2018 KoF - <span class="d-none d-sm-inline-block">Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ungdungthongminh.vn" target="blank">ungdungthongminh.vn</a></span>.</footer>
+        </div>
+        <!-- END right Content here -->
+    </div>
