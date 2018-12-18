@@ -13,7 +13,7 @@ class Model extends BaseModel {
     }
 
     static insert(title, comment, star, userID, hotelID) {
-        return new promise(async (resolve) => {
+            return new promise(async (resolve) => {
             try {
                 let dataRating = new RATING_MODEL({ title, comment, star, user: userID, hotel: hotelID });
                 let saveRating = await dataRating.save();
@@ -25,12 +25,12 @@ class Model extends BaseModel {
         })
     }
 
-    static getListRatingWithHotel(hotelID) {
+    static getListRatingWithHotel() {
         return new Promise(async resolve => {
             try {
-                let listRating = await RATING_MODEL.find({ hotel: hotelID });
+                // let listRating = await RATING_MODEL.find({ hotel: hotelID }).populate('user');
+                let listRating = await RATING_MODEL.find({}).populate('user').populate('hotel');
                 if (!listRating) return resolve({ error: true, message: 'cannot_get_list' });
-
                 return resolve({ error: false, data: listRating });
             } catch (error) {
                 return resvolve({ error: true, message: error.message });

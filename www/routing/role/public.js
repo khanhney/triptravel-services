@@ -4,14 +4,16 @@ const promise     = require('bluebird');
 const roles       = require('../../config/cf_role');
 const ChildRouter = require('../child_routing');
 
-const USER_MODEL   = require('../../models/user');
-const TRIP_MODEL   = require('../../models/trip');
-const HOTEL_MODEL  = require('../../models/hotel');
-const RATING_MODEL = require('../../models/rating');
-const TRIP_COLL    = require('../../database/travel-coll');
-const APP          = require('../../../app');
-const stringUtils  = require('../../utils/string_utils');
-const HOTEL_COLL   = require('../../database/hotel-coll');
+const USER_MODEL     = require('../../models/user');
+const TRIP_MODEL     = require('../../models/trip');
+const HOTEL_MODEL    = require('../../models/hotel');
+const RATING_MODEL   = require('../../models/rating');
+const TRIP_COLL      = require('../../database/travel-coll');
+const APP            = require('../../../app');
+const stringUtils    = require('../../utils/string_utils');
+const HOTEL_COLL     = require('../../database/hotel-coll');
+const CHATBOT_COLL   = require('../../database/chatbot-coll');
+const { chatBotKit } = require('../../utils/chatbot_kit');
 
 module.exports = class Auth extends ChildRouter {
     constructor() {
@@ -63,6 +65,34 @@ module.exports = class Auth extends ChildRouter {
                     get: [ async (req, res) => {
                         let listHotel = await HOTEL_MODEL.getListHotel();
                         ChildRouter.renderToView(req, res, { listHotel: listHotel.data });
+                    }]
+                },
+            },
+            '/list-rating-user': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/list-rating-user.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let listHotel = await RATING_MODEL.getListRatingWithHotel();
+                        ChildRouter.renderToView(req, res, { listHotel: listHotel.data });
+                    }]
+                },
+            },
+            '/list-chatbot': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/list-chatbot.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let listChat = await CHATBOT_COLL.find({});
+                        ChildRouter.renderToView(req, res, { listChat: listChat });
                     }]
                 },
             },
@@ -314,11 +344,7 @@ module.exports = class Auth extends ChildRouter {
                         const { hotelID } = req.params;
                         if (req.files) {
                             const uploadPath = `${APP.BASE_DIR}/files/hotel`;
-
-                            // FOR WINDOWS
-                            // fileUtils.checkAndCreateFolder(uploadPath);
-            
-                            let file = req.files.image;
+                            let   file       = req.files.image;
             
                             const filePath    = file.name.split('.');
                             const newFileName = `${stringUtils.md5((new Date()).getTime() + '_' + stringUtils.md5(file.name) + '_' + stringUtils.randomString())}.${filePath[ filePath.length - 1 ]}`;
@@ -383,6 +409,20 @@ module.exports = class Auth extends ChildRouter {
                 },
             },
 
+            '/update-hotel/:hotelID': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    post: [ async (req, res) => {
+                        let { hotelID }                           = req.params;
+                        let { title, description, review, price } = req.body;
+                        let updateTrip                            = await HOTEL_MODEL.update(hotelID, title, description, review, price);
+                        res.json(updateTrip);
+                    }]
+                },
+            },
             // ==================== RATING ================ //
             '/add-rating': {
                 config: {
@@ -391,9 +431,10 @@ module.exports = class Auth extends ChildRouter {
                 },
                 methods: {
                     post: [ async (req, res) => {
-                        let user                              = req.user.data_user;
-                        let { title, comment, star, hotelID } = req.body;
-                        let insertResp                        = await RATING_MODEL.insert(title, comment, star, user._id, hotelID);
+                        let user                     = req.user.data_user;
+                        let hotelID                  = '5c18d2a072618b2ad575afdc';
+                        let { title, message, star } = req.body;
+                        let insertResp               = await RATING_MODEL.insert(title, message, star, user._id, hotelID);
                         res.json(insertResp);
                     }]
                 },
@@ -409,6 +450,37 @@ module.exports = class Auth extends ChildRouter {
                         let { ratingID } = req.params;
                         let infoRating   = await RATING_MODEL.getInfoRating(ratingID);
                         res.json(infoRating);
+                    }]
+                },
+            },  
+
+            '/list-rating': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let listRating = await RATING_MODEL.getListRatingWithHotel();
+                        res.json(listRating);
+                    }]
+                },
+            },
+            
+            // ========= == ======= CHATBOT ============ //
+            '/chat-bot/:message': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let { message } = req.params;
+                        let result      = await chatBotKit(message);
+                        res.json({
+                            score : result.response.score,
+                            awnser: result.response.answer
+                        });
                     }]
                 },
             },

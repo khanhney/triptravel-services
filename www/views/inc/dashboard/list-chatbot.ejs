@@ -1,0 +1,52 @@
+<!-- Begin page -->
+    <div id="wrapper">
+        <!-- Top Bar Start -->
+        <% include components/top_nav.ejs%>
+        <!-- Top Bar End -->
+        <% include components/left_nav.ejs %>
+        <!-- Left Sidebar End -->
+
+        <!-- Start right Content here -->
+        <div class="content-page">
+            <!-- Start content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th><strong>Câu Hỏi</strong></th>
+                                <th><strong>Trả Lòi</strong></th>
+                                <th><strong>Đánh Giá</strong></th>
+                                <th><strong>Ngày Gửi</strong></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% var flag = 1; %>
+                            <%listChat.forEach(item => {%>
+                                <tr>
+                                    <td><%= flag%></td>
+                                    <td><%= item.message%></td>
+                                    <td><%= item.answer%></td>
+                                    <td>
+                                        <%if(Number(item.pointUserRating) == 0) {%>
+                                            <span class="badge badge-warning">Không Đánh Giá</span>
+                                        <%}else{%>
+                                            <strong><i><%= item.pointUserRating%></i></strong>
+                                        <%}%>
+                                    </td>
+                                    <td><%= moment(item.updateAt).subtract(10, 'days').calendar();%></td>
+                                    <% flag = flag + 1;%>
+                                </tr>
+                            <%})%>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- content -->
+            <footer class="footer">© 2018 KoF - <span class="d-none d-sm-inline-block">Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ungdungthongminh.vn" target="blank">ungdungthongminh.vn</a></span>.</footer>
+        </div>
+        <!-- END right Content here -->
+    </div>

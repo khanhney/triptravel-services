@@ -35,7 +35,7 @@ class Model extends BaseModel {
                 
                 let updateHotel = await HOTEL_MODEL.findByIdAndUpdate(hotelID, {
                     $set: {
-                        title, description, review, price
+                        title, description, review, price, updateAt: Date.now()
                     }
                 }, { new: true });
                 if (!updateHotel) return resolve({ error: true, message: 'cannot_update_hotel' });

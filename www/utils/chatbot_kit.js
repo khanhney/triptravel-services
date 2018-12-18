@@ -4,13 +4,13 @@ const manager = new NlpManager({ languages: ['en'] });
 
 manager.load('./model.nlp');
 
-function callModel() {
+const CHATBOT_COLL = require('../database/chatbot-coll');
+
+exports.chatBotKit = (message) => {
     return new Promise(async resolve=> {
-        const response = await manager.process('en', 'Hello, I miss you');
+        const response = await manager.process('en', message);
+        const dataChat = new CHATBOT_COLL({ message: message, answer: response.answer });
+        const saveChat = await dataChat.save();
         return resolve({ response });
     });
 }
-
-callModel()
-    .then(resp => console.log({ resp }))
-    .catch(err => console.log(err));
