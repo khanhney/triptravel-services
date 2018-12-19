@@ -1,0 +1,13 @@
+{"_id":{"$oid":"5c191289d233fd591901b9e7"},"pointUserRating":0,"message":"hello","answer":"Hey there!","__v":0}
+{"_id":{"$oid":"5c19139187fef659d1d8e20c"},"pointUserRating":0,"message":"hello","answer":"Greetings!","__v":0}
+{"_id":{"$oid":"5c1913b54a72045a3f74ce20"},"pointUserRating":0,"message":"hello","answer":"Greetings!","__v":0}
+{"_id":{"$oid":"5c1913ea6b1eed5ae998aef9"},"pointUserRating":0,"message":"goodbye","answer":"see you soon!","__v":0}
+{"_id":{"$oid":"5c1913f26b1eed5ae998aefa"},"pointUserRating":0,"message":"see you soon","answer":"Same here. I was starting to miss you","__v":0}
+{"_id":{"$oid":"5c1913fa6b1eed5ae998aefb"},"pointUserRating":0,"message":"i miss you","answer":"Likewise!","__v":0}
+{"_id":{"$oid":"5c1914116b1eed5ae998aefc"},"pointUserRating":0,"message":"i fail","answer":"Welcome back. What can I do for you?","__v":0}
+{"_id":{"$oid":"5c19141b6b1eed5ae998aefd"},"pointUserRating":0,"message":"what do you do","answer":"Well, I'm not a person, I'm a virtual agent","__v":0}
+{"_id":{"$oid":"5c1914286b1eed5ae998aefe"},"pointUserRating":0,"message":"yes im heard","__v":0}
+{"_id":{"$oid":"5c1914526b1eed5ae998aeff"},"pointUserRating":0,"message":"like you","answer":"That's great to hear","__v":0}
+{"_id":{"$oid":"5c19146a6b1eed5ae998af00"},"pointUserRating":0,"message":"i like you","answer":"That's great to hear","__v":0}
+{"_id":{"$oid":"5c19148a6b1eed5ae998af01"},"pointUserRating":0,"message":"the most beautiful place","answer":"Oh! Thank you!","__v":0}
+{"_id":{"$oid":"5c1914a16b1eed5ae998af02"},"pointUserRating":0,"message":"What is the most beautiful place","answer":"Oh! Thank you!","__v":0}
