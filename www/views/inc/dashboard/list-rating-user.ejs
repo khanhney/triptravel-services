@@ -32,8 +32,16 @@
                                     <td><%= item.title%></td>
                                     <td><%= item.comment%></td>
                                     <td><%= item.star%></td>
-                                    <td><%= item.user.username%></td>
-                                    <td><%= item.hotel.title%></td>
+                                    <td>
+                                        <%if (item.user) {%>
+                                            <%= item.user.username%>
+                                            <%}%>
+                                    </td>
+                                    <td>
+                                        <%if(item.hotel){%>
+                                            <%= item.hotel.title%>
+                                        <%}%>
+                                    </td>
                                     <td><%= moment(item.updateAt).subtract(10, 'days').calendar();%></td>
                                     <% flag = flag + 1;%>
                                 </tr>

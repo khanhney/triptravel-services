@@ -423,6 +423,25 @@ module.exports = class Auth extends ChildRouter {
                     }]
                 },
             },
+
+            '/search-hotel': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let { search }                           = req.query;
+                        let listHotel  = await HOTEL_COLL.find({
+                            title:     new RegExp(search, 'i')
+                        }).limit(3);
+                        if (!listHotel) return res.json({ error: true, message: 'cannot_get_list_hotel' });
+                        return res.json({ error: false, data: listHotel }); 
+                    }]
+                },
+            },
+
+
             // ==================== RATING ================ //
             '/add-rating': {
                 config: {
@@ -468,14 +487,15 @@ module.exports = class Auth extends ChildRouter {
             },
             
             // ========= == ======= CHATBOT ============ //
-            '/chat-bot/:message': {
+            // /chat-bot?message=hello
+            '/chat-bot': {
                 config: {
                     auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
                     get: [ async (req, res) => {
-                        let { message } = req.params;
+                        let { message } = req.query;
                         let result      = await chatBotKit(message);
                         res.json({
                             score : result.response.score,

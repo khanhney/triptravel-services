@@ -11,8 +11,8 @@ exports.post_product = '';
 /**
  * [HOST-POST DEVELOPMENT]
  */
-exports.host_dev = 'localhost';
-exports.post_dev = '6909';
+exports.host_dev = '0.0.0.0';
+exports.post_dev = '5000';
 
 /**
  * [HOST ROUTER]
