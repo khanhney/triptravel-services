@@ -12,7 +12,7 @@ exports.post_product = '';
  * [HOST-POST DEVELOPMENT]
  */
 exports.host_dev = '0.0.0.0';
-exports.post_dev = '5000';
+exports.post_dev = '5900';
 
 /**
  * [HOST ROUTER]

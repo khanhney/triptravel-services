@@ -14,6 +14,7 @@ const stringUtils    = require('../../utils/string_utils');
 const HOTEL_COLL     = require('../../database/hotel-coll');
 const CHATBOT_COLL   = require('../../database/chatbot-coll');
 const { chatBotKit } = require('../../utils/chatbot_kit');
+const LAB7_MODEL     = require('../../models/lab7');
 
 module.exports = class Auth extends ChildRouter {
     constructor() {
@@ -504,6 +505,36 @@ module.exports = class Auth extends ChildRouter {
                     }]
                 },
             },
+
+            // LAB7
+
+            '/lab7': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    post: [ async (req, res) => {
+                        let { title, address, category } = req.body;
+                        let result      = await LAB7_MODEL.insert(title, address, category);
+                        
+                        res.json(result);
+                    }]
+                },
+            },
+
+            '/list-lab7': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let listLab7 = await LAB7_MODEL.getList();
+                        res.json(listLab7);
+                    }]
+                },
+            },            
         }
     }
 };
