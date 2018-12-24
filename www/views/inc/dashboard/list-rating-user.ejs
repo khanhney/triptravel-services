@@ -34,8 +34,10 @@
                                     <td><%= item.star%></td>
                                     <td>
                                         <%if (item.user) {%>
-                                            <%= item.user.username%>
-                                            <%}%>
+                                            <a href="#">
+                                                <strong><%= item.user.username%></strong>
+                                            </a>
+                                        <%}%>
                                     </td>
                                     <td>
                                         <%if(item.hotel){%>

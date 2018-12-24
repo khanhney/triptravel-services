@@ -1,0 +1,93 @@
+
+
+ <!-- Begin page -->
+ <div id="wrapper">
+    <!-- Top Bar Start -->
+    <% include components/top_nav.ejs%>
+    <!-- Top Bar End -->
+    <% include components/left_nav.ejs %>
+    <!-- Left Sidebar End -->
+
+    <!-- Start right Content here -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container-fluid">
+                <table class="table table-dark mb-0">
+                    <thead>
+                       <tr>
+                          <th>#</th>
+                          <th>Tiêu Đề Đánh Giá</th>
+                          <th>Ngày Tạo</th>
+                          <th>IPFS</th>
+                          <th>BlockChain</th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                        <% var flag = 1; %>
+                        <%listRatingBlockchain.forEach(item => {%>
+                            <tr>
+                                <th><%= flag%></th>
+                                <th><%= item.rating.title%></th>
+                                <th><%= moment(item.createAt).subtract(10, 'days').calendar();%></th>
+                                <th>
+                                    <a href="#" class="btnGetIPFS" _id="<%= item.hashStringIPFS%>">
+                                        <%= item.hashStringIPFS%>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a target="blank" href="https://ropsten.etherscan.io/tx/<%=item.hashTransaction%>">
+                                        <%= item.hashTransaction%>
+                                    </a>
+                                </th>
+                             </tr>
+                            <%flag = flag + 1;%>
+                        <%})%>
+                    </tbody>
+                 </table>
+            </div>
+            <!-- container-fluid -->
+        </div>
+        <!-- content -->
+        <footer class="footer">© 2018 KoF - <span class="d-none d-sm-inline-block">Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://ungdungthongminh.vn" target="blank">ungdungthongminh.vn</a></span>.</footer>
+    </div>
+    <!-- END right Content here -->
+
+    <!--  Modal content for the above example -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="myLargeModalLabel">Thông Tin lưu trữ IPFS (Database Decentralized)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                        <div class="card-body">
+                            <br>
+                            <div class="form-group row">
+                                <label for="txtTitle" class="col-sm-2 col-form-label">Tiêu Đề</label>
+                                <div class="col-sm-10"><input class="form-control" placeholder="Du Lịch Mỹ 5 Ngày" id="txtTitle" type="text" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="txtComment" class="col-sm-2 col-form-label">Đánh Giá</label>
+                                <div class="col-sm-10"><input class="form-control" placeholder="Du Lịch Mỹ 5 Ngày" id="txtComment" type="text" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="txtUser" class="col-sm-2 col-form-label">Người Dùng</label>
+                                <div class="col-sm-10"><input class="form-control" placeholder="Du Lịch Mỹ 5 Ngày" id="txtUser" type="text" disabled>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+

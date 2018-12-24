@@ -13,8 +13,8 @@ const APP            = require('../../../app');
 const stringUtils    = require('../../utils/string_utils');
 const HOTEL_COLL     = require('../../database/hotel-coll');
 const CHATBOT_COLL   = require('../../database/chatbot-coll');
+const RATING_BLOCKCHAIN = require('../../database/hashing-rating-coll');
 const { chatBotKit } = require('../../utils/chatbot_kit');
-const LAB7_MODEL     = require('../../models/lab7');
 
 module.exports = class Auth extends ChildRouter {
     constructor() {
@@ -24,6 +24,24 @@ module.exports = class Auth extends ChildRouter {
     registerRouting(io) {
         return {
             
+            '/read-file/:filename': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        var fs = require('fs');
+                        const { filename } = req.params;
+                        fs.readFile(`/Users/apple/nodejs/meo-hub-docker/node-red/data/${filename}`, 'utf8', function(err, contents) {
+                            console.log(contents);
+                            res.json({contents});
+                        });
+                        console.log('after calling readFile');
+                    }]
+                },
+            },
+
             '/': {
                 config: {
                     auth: [ roles.role.all.bin ],
@@ -35,7 +53,25 @@ module.exports = class Auth extends ChildRouter {
                     }]
                 },
             },
-            
+            '/list-blockchain-rating': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'view',
+                    view: 'index.ejs',
+                    inc : 'inc/dashboard/list-blockchain-rating.ejs',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        try {
+                            let listRatingBlockchain = await RATING_BLOCKCHAIN.find({}).populate('rating');
+                            if (!listRatingBlockchain) return res.json({ error: true, message: 'cannot_get_list' });
+                            ChildRouter.renderToView(req, res, { listRatingBlockchain });
+                        } catch (error) {
+                            return res.json({ error: true, message: error.message });
+                        }
+                    }]
+                },
+            },
             '/list-travel': {
                 config: {
                     auth: [ roles.role.all.bin ],
@@ -78,7 +114,7 @@ module.exports = class Auth extends ChildRouter {
                 },
                 methods: {
                     get: [ async (req, res) => {
-                        let listHotel = await RATING_MODEL.getListRatingWithHotel();
+                        let listHotel = await RATING_MODEL.getListRating();
                         ChildRouter.renderToView(req, res, { listHotel: listHotel.data });
                     }]
                 },
@@ -452,8 +488,7 @@ module.exports = class Auth extends ChildRouter {
                 methods: {
                     post: [ async (req, res) => {
                         let user                     = req.user.data_user;
-                        let hotelID                  = '5c18d2a072618b2ad575afdc';
-                        let { title, message, star } = req.body;
+                        let { title, message, star, hotelID } = req.body;
                         let insertResp               = await RATING_MODEL.insert(title, message, star, user._id, hotelID);
                         res.json(insertResp);
                     }]
@@ -481,12 +516,27 @@ module.exports = class Auth extends ChildRouter {
                 },
                 methods: {
                     get: [ async (req, res) => {
-                        let listRating = await RATING_MODEL.getListRatingWithHotel();
+                        let { hotelId } = req.query;
+                        console.log({ hotelId });
+                        let listRating = await RATING_MODEL.getListRatingWithHotel(hotelId);
                         res.json(listRating);
                     }]
                 },
             },
-            
+
+            '/get-info-rating-ipfs/:hashStringIPFS': {
+                config: {
+                    auth: [ roles.role.all.bin ],
+                    type: 'json',
+                },
+                methods: {
+                    get: [ async (req, res) => {
+                        let { hashStringIPFS } = req.params;
+                        let infoIPFS = await RATING_MODEL.getInfoRatingInIPFS(hashStringIPFS);
+                        res.json(infoIPFS);
+                    }]
+                },
+            },
             // ========= == ======= CHATBOT ============ //
             // /chat-bot?message=hello
             '/chat-bot': {
@@ -505,36 +555,24 @@ module.exports = class Auth extends ChildRouter {
                     }]
                 },
             },
-
-            // LAB7
-
-            '/lab7': {
+            '/user-rating-aswer': {
                 config: {
                     auth: [ roles.role.all.bin ],
                     type: 'json',
                 },
                 methods: {
                     post: [ async (req, res) => {
-                        let { title, address, category } = req.body;
-                        let result      = await LAB7_MODEL.insert(title, address, category);
-                        
-                        res.json(result);
+                        try {
+                            let { message, answer, pointUserRating } = req.body;
+                            let initChatbot = new CHATBOT_COLL({ message, answer, pointUserRating });
+                            let saveChatbot = await initChatbot.save();
+                            return res.json({ error: false, data: saveChatbot });
+                        } catch (error) {
+                            return res.json({ error: true, message: error.message });
+                        }
                     }]
                 },
             },
-
-            '/list-lab7': {
-                config: {
-                    auth: [ roles.role.all.bin ],
-                    type: 'json',
-                },
-                methods: {
-                    get: [ async (req, res) => {
-                        let listLab7 = await LAB7_MODEL.getList();
-                        res.json(listLab7);
-                    }]
-                },
-            },            
         }
     }
 };

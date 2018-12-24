@@ -1,0 +1,24 @@
+<script>
+    $(document).ready(function(){
+        $('.btnGetIPFS').on('click', function(e){
+            e.preventDefault();
+            let hashStringIPFS = $(this).attr('_id');
+
+            $.ajax({
+                url: `/get-info-rating-ipfs/${hashStringIPFS}`,
+                method: 'GET',
+                success: function(resp) {
+                    let data = resp.data;
+                    $('#txtTitle').val(data.title);
+                    $('#txtComment').val(data.comment);
+                    $('#txtUser').val(data.user);
+
+                    $('.bs-example-modal-lg').modal('show');
+
+                }, error: function(err) {
+                    console.log(err);
+                }
+            })
+        });
+    })
+</script>

@@ -18,4 +18,12 @@ module.exports  = BASE_COLL("rating", {
     },
     createAt: { type: Date, default: Date.now },
     updateAt: { type: Date, default: Date.now },
+    /**
+     * 1. PUSHED BLOCKCHAIN
+     * 0. NOT PUSH
+     */
+    status  : {
+        type: Number,
+        default: 0
+    }
 });
