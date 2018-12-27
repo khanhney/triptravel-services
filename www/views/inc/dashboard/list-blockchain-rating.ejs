@@ -28,7 +28,11 @@
                         <%listRatingBlockchain.forEach(item => {%>
                             <tr>
                                 <th><%= flag%></th>
-                                <th><%= item.rating.title%></th>
+                                <th>
+                                    <%if (item.rating.title) {%>
+                                        <%= item.rating.title%>
+                                    <%}%>
+                                </th>
                                 <th><%= moment(item.createAt).subtract(10, 'days').calendar();%></th>
                                 <th>
                                     <a href="#" class="btnGetIPFS" _id="<%= item.hashStringIPFS%>">
